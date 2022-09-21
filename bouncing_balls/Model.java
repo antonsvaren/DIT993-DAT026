@@ -3,6 +3,10 @@ import java.lang.Math;
 
 import static java.lang.Math.*;
 /**
+ * Martin: 3h
+ */
+
+/**
  * The physics model.
  * 
  * This class is where you should implement your bouncing balls model.
@@ -40,13 +44,14 @@ class Model {
 		areaHeight = height;
 		
 		// Initialize the model with a few balls
-		balls = new Ball[2];
+		balls = new Ball[3];
 		/*
 		balls[0] = new Ball(width / 3, height * 0.9, 1.2, 1.6, 0.2);
 		balls[1] = new Ball(2 * width / 3, height * 0.7, -0.6, 0.6, 0.3);*/
 		// Balls colliding horizontally:
-		balls[0] = new Ball(width / 3, height * 0.9, 1.2, 0, 0.2);
-		balls[1] = new Ball(2*width / 3, height * 0.9, -0.6, 0, 0.3);
+		balls[0] = new Ball(0.2, height * 0.9, 1.2, 0, 0.2);
+		balls[1] = new Ball(width - 0.3, height * 0.9, -0.6, 0, 0.3);
+		balls[2] = new Ball(2, height * 0.9, 0.8, 0, 0.25);
 	}
 
 	void step(double deltaT) {
@@ -72,14 +77,23 @@ class Model {
 					Ball bj = balls[j];
 					/* v1 = (m1u1 + 2*m2u2 - m2u1)/(m1 + m2)
 					v2 = (2*m1u1 + m2u2 - m1u2)/(m1 + m2)*/
+
+					// Check if there is a collision right now
 					double dx = abs(b.x - bj.x);
 					double dy = abs(b.y - bj.y);
 					double distance = sqrt(pow(dy,2) + pow(dx,2));
-					if(distance <= b.radius+bj.radius){
+
+					// Check if there will be collision after movement
+					double dx_next = abs(b.x + b.vx*deltaT - bj.x - bj.vx*deltaT);
+					double dy_next = abs(b.y + b.vy*deltaT - bj.y - bj.vy*deltaT);
+					double distance_next = sqrt(pow(dy_next,2) + pow(dx_next,2));
+					// If there's a collision both now and after movement then it's a true collision
+					if(distance <= b.radius+bj.radius && (distance > distance_next)){
 						System.out.println("COLLISION");
 						// mi = ri^2*Pi
 						double mb = pow(b.radius,2)* PI;
 						double mbj = pow(bj.radius,2)* PI;
+
 						/* double bv = (b.vx + 2*bj.vx - b.vx)/(1 + 1);
 						double bjv = (2*b.vx + bj.vx - bj.vx)/(1 + 1);*/
 						double bv = (mb*b.vx + mbj*2*bj.vx - mbj*b.vx)/(mb + mbj);
