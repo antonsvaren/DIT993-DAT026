@@ -70,15 +70,20 @@ class Model {
 				Ball b = balls[i];
 				for(int j = i+1; j < balls.length; j++){
 					Ball bj = balls[j];
-					/* v2 = (2*m1u1 + m2u2 - m1u2)/(m1 + m2)
-						v1 = (m1u1 + 2*m2u2 - m2u1)/(m1 + m2)*/
+					/* v1 = (m1u1 + 2*m2u2 - m2u1)/(m1 + m2)
+					v2 = (2*m1u1 + m2u2 - m1u2)/(m1 + m2)*/
 					double dx = abs(b.x - bj.x);
 					double dy = abs(b.y - bj.y);
 					double distance = sqrt(pow(dy,2) + pow(dx,2));
 					if(distance <= b.radius+bj.radius){
 						System.out.println("COLLISION");
-						double bv = (b.vx + 2*bj.vx - b.vx)/(1 + 1);
-						double bjv = (2*b.vx + bj.vx - bj.vx)/(1 + 1);
+						// mi = ri^2*Pi
+						double mb = pow(b.radius,2)* PI;
+						double mbj = pow(bj.radius,2)* PI;
+						/* double bv = (b.vx + 2*bj.vx - b.vx)/(1 + 1);
+						double bjv = (2*b.vx + bj.vx - bj.vx)/(1 + 1);*/
+						double bv = (mb*b.vx + mbj*2*bj.vx - mbj*b.vx)/(mb + mbj);
+						double bjv = (2*mb*b.vx + mbj*bj.vx - mb*bj.vx)/(mb + mbj);
 						b.vx = bv;
 						bj.vx = bjv;
 					}
