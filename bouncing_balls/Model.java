@@ -1,5 +1,7 @@
 package bouncing_balls;
+import java.lang.Math;
 
+import static java.lang.Math.*;
 /**
  * The physics model.
  * 
@@ -24,7 +26,8 @@ package bouncing_balls;
  * =(m1u1 + 2*m2u2 - m2u1)/(m1 + m2)
  *
  * v2 = (2*m1u1 + m2u2 - m1u2)/(m1 + m2)
- * v1 = (m1u1 + 2*m2u2 - m2u1)/(m1 + m2)*/
+ * v1 = (m1u1 + 2*m2u2 - m2u1)/(m1 + m2)
+ * v1 = hastighetsvektor efter kollision, m1 = massa boll1, m2= massa boll2, u1 = hastighet boll1, u2= hastighet boll2*/
 
 class Model {
 
@@ -38,8 +41,12 @@ class Model {
 		
 		// Initialize the model with a few balls
 		balls = new Ball[2];
+		/*
 		balls[0] = new Ball(width / 3, height * 0.9, 1.2, 1.6, 0.2);
-		balls[1] = new Ball(2 * width / 3, height * 0.7, -0.6, 0.6, 0.3);
+		balls[1] = new Ball(2 * width / 3, height * 0.7, -0.6, 0.6, 0.3);*/
+		// Balls colliding horizontally:
+		balls[0] = new Ball(width / 3, height * 0.9, 1.2, 0, 0.2);
+		balls[1] = new Ball(2*width / 3, height * 0.9, -0.6, 0, 0.3);
 	}
 
 	void step(double deltaT) {
@@ -57,6 +64,27 @@ class Model {
 			b.x += deltaT * b.vx;
 			b.y += deltaT * b.vy;
 		}
+
+			// detect collision with each ball on every other ball once
+			for(int i = 0; i < balls.length; i++){
+				Ball b = balls[i];
+				for(int j = i+1; j < balls.length; j++){
+					Ball bj = balls[j];
+					/* v2 = (2*m1u1 + m2u2 - m1u2)/(m1 + m2)
+						v1 = (m1u1 + 2*m2u2 - m2u1)/(m1 + m2)*/
+					double dx = abs(b.x - bj.x);
+					double dy = abs(b.y - bj.y);
+					double distance = sqrt(pow(dy,2) + pow(dx,2));
+					if(distance <= b.radius+bj.radius){
+						System.out.println("COLLISION");
+						double bv = (b.vx + 2*bj.vx - b.vx)/(1 + 1);
+						double bjv = (2*b.vx + bj.vx - bj.vx)/(1 + 1);
+						b.vx = bv;
+						bj.vx = bjv;
+					}
+
+				}
+			}
 	}
 	
 	/**
