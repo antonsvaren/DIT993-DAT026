@@ -10,6 +10,22 @@ package bouncing_balls;
  * @author Simon Robillard
  *
  */
+/**
+* Conservation of momentum: m1u1 +m2u2 = m1v1 + m2v2
+ * Conservation of energy: m1u1^2 + m2u2^2 = m1v1^2 + m2v2^2
+ * }=> u2 - u1 = v1 - v2
+ * v1 = u2 - u1 + v2
+ * => m1u1 + m2u2 - m1(u2 - u1 + v2) = m2v2
+ * <=> m1u1 + m2u2 - m1u2 + m1u1 - m1v2 = m2v2
+ * <=> 2*m1u1 + m2u2 - m1u2 = (m1 + m2)v2
+ * v2 = (2*m1u1 + m2u2 - m1u2)/(m1 + m2) =>
+ * v1 = u2 - u1 + (2*m1u1 + m2u2 - m1u2)/(m1 + m2)
+ * =(2*m1u1 + m2u2 - m1u2 - m1u1 - m2u1 + m1u2 + m2u2)/(m1 + m2)
+ * =(m1u1 + 2*m2u2 - m2u1)/(m1 + m2)
+ *
+ * v2 = (2*m1u1 + m2u2 - m1u2)/(m1 + m2)
+ * v1 = (m1u1 + 2*m2u2 - m2u1)/(m1 + m2)*/
+
 class Model {
 
 	double areaWidth, areaHeight;
