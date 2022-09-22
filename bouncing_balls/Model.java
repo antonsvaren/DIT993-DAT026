@@ -40,17 +40,18 @@ class Model {
 	Ball [] balls;
 
 	Model(double width, double height) {
+		final double gravity = -9.82;
 		areaWidth = width;
 		areaHeight = height;
 		
 		// Initialize the model with a few balls
 		balls = new Ball[2];
-		/*
+
 		balls[0] = new Ball(width / 3, height * 0.9, 1.2, 1.6, 0.2);
-		balls[1] = new Ball(2 * width / 3, height * 0.7, -0.6, 0.6, 0.3);*/
+		balls[1] = new Ball(2 * width / 3, height * 0.7, -0.6, 0.6, 0.3);
 		// Balls colliding horizontally:
-		balls[0] = new Ball(0.2, height * 0.9, 1.2, 0, 0.2);
-		balls[1] = new Ball(width - 0.3, height * 0.9, -0.6, 0, 0.3);
+		/*balls[0] = new Ball(0.2, height * 0.9, 1.2, 0, 0.2);
+		balls[1] = new Ball(width - 0.3, height * 0.9, -0.6, 0, 0.3);*/
 		//balls[2] = new Ball(2, height * 0.9, 0.8, 0, 0.25);
 	}
 
@@ -72,16 +73,15 @@ class Model {
 
 			// detect collision with each ball on every other ball once
 			for(int i = 0; i < balls.length; i++){
-				Ball b = balls[i];
+				Ball b = balls[i]; // First ball
 				for(int j = i+1; j < balls.length; j++){
-					Ball bj = balls[j];
-
+					Ball bj = balls[j]; // Second ball
 
 					// Find distance between ball's center before movement
 					double dx = abs(b.x - bj.x);
 					double dy = abs(b.y - bj.y);
 					double distance = sqrt(pow(dy,2) + pow(dx,2));
-
+					//System.out.println("ANGLE IS: " + 57.2957795*calculateAngle(b.x, b.y, bj.x, bj.y));
 					// If there's a collision before movement
 					if(distance <= b.radius+bj.radius){
 						// Find distance between ball's center after movement
@@ -104,7 +104,6 @@ class Model {
 							bj.vx = bjv;
 						}
 					}
-
 				}
 			}
 	}
@@ -114,11 +113,13 @@ class Model {
 		double v = atan2(y,x); // Angle
 		return new Polar(r,v);
 	}
+
 	Rect polarToRect(Polar p){
 		double x = cos(p.v)*p.r;
 		double y = sin(p.v)*p.r;
 		return new Rect(x,y);
 	}
+
 	class Rect{
 		double x,y;
 		Rect(double x, double y){
@@ -126,6 +127,7 @@ class Model {
 			this.y = y;
 		}
 	}
+
 	class Polar {
 		double r,v;
 		Polar(double r, double v){
@@ -152,4 +154,14 @@ class Model {
 		 */
 		double x, y, vx, vy, radius;
 	}
+	double calculateAngle(double x1, double y1, double x2, double y2){
+		double a = x1-x2;
+		double b = y1-y2;
+		double alpha = atan(b/a);
+		return alpha;
+	}
+
+	/*
+	a = abs(x1-x2), b = abs(y2-y1), alpha = arctan(a/b)
+	*/
 }
