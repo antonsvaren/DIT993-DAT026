@@ -3,7 +3,7 @@ import java.lang.Math;
 
 import static java.lang.Math.*;
 /**
- * Martin: 3h
+ * Martin: 5h
  */
 
 /**
@@ -108,7 +108,32 @@ class Model {
 				}
 			}
 	}
-	
+
+	Polar rectToPolar(double x, double y){
+		double r = sqrt(pow(x,2)+pow(y,2)); // Length
+		double v = atan2(y,x); // Angle
+		return new Polar(r,v);
+	}
+	Rect polarToRect(Polar p){
+		double x = cos(p.v)*p.r;
+		double y = sin(p.v)*p.r;
+		return new Rect(x,y);
+	}
+	class Rect{
+		double x,y;
+		Rect(double x, double y){
+			this.x = x;
+			this.y = y;
+		}
+	}
+	class Polar {
+		double r,v;
+		Polar(double r, double v){
+			this.r = r;
+			this.v = v;
+		}
+	}
+
 	/**
 	 * Simple inner class describing balls.
 	 */
