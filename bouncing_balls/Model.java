@@ -96,18 +96,37 @@ class Model {
 							double mb = pow(b.radius,2)* PI;
 							double mbj = pow(bj.radius,2)* PI;
 
+
+							double v = calculateAngle(b.x,b.y,bj.x,bj.y); // Calculate angle
+							// Rotate x-axis and calculate velocities in regards to this axis
+							Rect bv_r = rotateVelocity(new Rect(b.vx,b.vy),v);
+							Rect bjv_r = rotateVelocity(new Rect(bj.vx,bj.vy),v);
+							// Collision calculation of vx on both balls
+							double bv_r_tmp = (mb*bv_r.x + mbj*2*bjv_r.x - mbj*bv_r.x)/(mb + mbj);
+							bjv_r.x = (2*mb*bv_r.x + mbj*bjv_r.x - mb*bjv_r.x)/(mb + mbj);
+							bv_r.x = bv_r_tmp;
+							// Rotate the x-axis back and recalculate the velocities for original axis
+							bv_r = rotateVelocity(bv_r,-v);
+							bjv_r = rotateVelocity(bjv_r,-v);
+							// Set the new results
+							b.vx = bv_r.x;
+							b.vy = bv_r.y;
+							bj.vx = bjv_r.x;
+							bj.vy = bjv_r.y;
 							/* 	v1 = (m1u1 + 2*m2u2 - m2u1)/(m1 + m2)
-								v2 = (2*m1u1 + m2u2 - m1u2)/(m1 + m2)*/
+								v2 = (2*m1u1 + m2u2 - m1u2)/(m1 + m2)
 							double bv = (mb*b.vx + mbj*2*bj.vx - mbj*b.vx)/(mb + mbj);
 							double bjv = (2*mb*b.vx + mbj*bj.vx - mb*bj.vx)/(mb + mbj);
 							b.vx = bv;
-							bj.vx = bjv;
+							bj.vx = bjv;*/
 						}
 					}
 				}
 			}
 	}
-
+	Rect rotateVelocity(Rect p, double v){
+		return new Rect(cos(v)*p.x + sin(v)*p.y,-sin(v)*p.x + cos(v)*p.y);
+	}
 	Polar rectToPolar(double x, double y){
 		double r = sqrt(pow(x,2)+pow(y,2)); // Length
 		double v = atan2(y,x); // Angle
@@ -119,7 +138,12 @@ class Model {
 		double y = sin(p.v)*p.r;
 		return new Rect(x,y);
 	}
-
+	double calculateAngle(double x1, double y1, double x2, double y2){
+		double a = x1-x2;
+		double b = y1-y2;
+		double alpha = atan(b/a);
+		return alpha;
+	}
 	class Rect{
 		double x,y;
 		Rect(double x, double y){
@@ -154,14 +178,4 @@ class Model {
 		 */
 		double x, y, vx, vy, radius;
 	}
-	double calculateAngle(double x1, double y1, double x2, double y2){
-		double a = x1-x2;
-		double b = y1-y2;
-		double alpha = atan(b/a);
-		return alpha;
-	}
-
-	/*
-	a = abs(x1-x2), b = abs(y2-y1), alpha = arctan(a/b)
-	*/
 }
