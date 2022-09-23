@@ -3,7 +3,7 @@ import java.lang.Math;
 
 import static java.lang.Math.*;
 /**
- * Martin: 5h
+ * Martin: 12h
  */
 
 /**
@@ -45,31 +45,40 @@ class Model {
 		areaHeight = height;
 		
 		// Initialize the model with a few balls
-		balls = new Ball[2];
+		balls = new Ball[6];
 
-		balls[0] = new Ball(width / 3, height * 0.9, 1.2, 1.6, 0.2);
-		balls[1] = new Ball(2 * width / 3, height * 0.7, -0.6, 0.6, 0.3);
+		//balls[0] = new Ball(width / 3, height * 0.9, 1.2, 1.6, 0.2);
+		//balls[0] = new Ball(2 * width / 3, height * 0.7, -0.6, 0.6, 0.3);
 		// Balls colliding horizontally:
-		/*balls[0] = new Ball(0.2, height * 0.9, 1.2, 0, 0.2);
-		balls[1] = new Ball(width - 0.3, height * 0.9, -0.6, 0, 0.3);*/
-		//balls[2] = new Ball(2, height * 0.9, 0.8, 0, 0.25);
+		balls[0] = new Ball(0.2, height * 0.9, 1.2, 0, 0.2);
+		balls[1] = new Ball(width - 0.3, height * 0.9, -0.6, 0, 0.3);
+		balls[2] = new Ball(2, height * 0.9, 0.8, 0, 0.25);
+		balls[3] = new Ball(2, height * 0.9 + 0.4, 1.2, 0, 0.2);
+		balls[4] = new Ball(width - 0.4, height * 0.9 + 0.4, -0.6, 0, 0.3);
+		balls[5] = new Ball(0.2, height * 0.9 + 0.4, 0.8, 0, 0.25);
 	}
 
 	void step(double deltaT) {
 		// TODO this method implements one step of simulation with a step deltaT
 		for (Ball b : balls) {
 			// detect collision with the border
-			if (b.x < b.radius || b.x > areaWidth - b.radius) {
+			if (b.x < b.radius && b.vx < 0 || b.x > areaWidth - b.radius && b.vx > 0) {
 				b.vx *= -1; // change direction of ball
 			}
-			if (b.y < b.radius || b.y > areaHeight - b.radius) {
+			if (b.y < b.radius && b.vy < 0 || b.y > areaHeight - b.radius && b.vy > 0) {
+				System.out.println(b.vy);
+				System.out.println("COLLISION");
 				b.vy *= -1;
+				System.out.println(b.vy);
+			}else{
+				b.vy -= deltaT*9.82;
 			}
 			
 			// compute new position according to the speed of the ball
 			b.x += deltaT * b.vx;
 			b.y += deltaT * b.vy;
 		}
+		// Gravity
 
 			// detect collision with each ball on every other ball once
 			for(int i = 0; i < balls.length; i++){
@@ -122,7 +131,9 @@ class Model {
 						}
 					}
 				}
+
 			}
+		System.out.println(balls[0].vy);
 	}
 	Rect rotateVelocity(Rect p, double v){
 		return new Rect(cos(v)*p.x + sin(v)*p.y,-sin(v)*p.x + cos(v)*p.y);
